@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubaidilms - English Learning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-brand">Ubaidilms</div>
+        <nav class="nav-links" id="main-nav" style="display: none;">
+            <button onclick="app.switchTab('dashboard')" class="nav-btn active" id="tab-dashboard">Dashboard</button>
+            <button onclick="app.switchTab('lessons')" class="nav-btn" id="tab-lessons">Lessons</button>
+            <button onclick="app.switchTab('quizzes')" class="nav-btn" id="tab-quizzes">Take Quiz</button>
+            <button onclick="app.logout()" class="logout-btn">Sign Out</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        
+        <!-- ================= AUTHENTICATION VIEW ================= -->
+        <section id="auth-view" class="view-card">
+            <div class="auth-toggle">
+                <button id="toggle-login" class="auth-toggle-btn active" onclick="app.toggleAuthForm('login')">Sign In</button>
+                <button id="toggle-signup" class="auth-toggle-btn" onclick="app.toggleAuthForm('signup')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" onsubmit="app.handleLogin(event)">
+                <h2>Welcome Back</h2>
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" required value="student@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required value="password123">
+                </div>
+                <button type="submit" class="btn-primary">Sign In</button>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signup-form" onsubmit="app.handleSignup(event)" style="display: none;">
+                <h2>Create Your Account</h2>
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" required placeholder="Samiullah Samejo">
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email Address</label>
+                    <input type="email" id="signup-email" required placeholder="name@domain.com">
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary">Register Account</button>
+            </form>
+            <p id="auth-message" class="error-msg"></p>
+        </section>
+
+        <!-- ================= STUDENT DASHBOARD VIEW ================= -->
+        <section id="dashboard-view" class="view-panel" style="display: none;">
+            <div class="welcome-banner">
+                <h1>Hello, <span id="user-display-name">Learner</span>!</h1>
+                <p>Track your milestones and build deep fluency in English prose.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Lessons Accessed</h3>
+                    <div class="stat-val" id="stat-lessons">0 / 11</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Quiz High Score</h3>
+                    <div class="stat-val" id="stat-score">0%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Platform Status</h3>
+                    <div class="stat-val certified" id="stat-cert-status">In Progress</div>
+                </div>
+            </div>
+
+            <!-- Certificate Section -->
+            <div id="certificate-claim-zone" class="cert-box" style="display: none;">
+                <h3>Congratulations on Completing a Quiz!</h3>
+                <p>Your academic achievement credential is ready for printing and digital download.</p>
+                <button onclick="app.switchTab('certificate')" class="btn-success">View & Download Certificate</button>
+            </div>
+
+            <div class="dashboard-content">
+                <h2>Quick Access Study Modules</h2>
+                <div class="module-shortcut-grid">
+                    <div class="shortcut-card" onclick="app.switchTab('lessons'); app.filterLessons('grammar')">
+                        <h4>Grammar Framework</h4>
+                        <p>Master Tenses, Voices, and core punctuation protocols.</p>
+                    </div>
+                    <div class="shortcut-card" onclick="app.switchTab('lessons'); app.filterLessons('parts-of-speech')">
+                        <h4>Parts of Speech</h4>
+                        <p>Deconstruct structural blocks from nouns to interjections.</p>
+                    </div>
+                    <div class="shortcut-card" onclick="app.switchTab('lessons'); app.filterLessons('vocabulary')">
+                        <h4>Vocabulary Vault</h4>
+                        <p>Acquire premium terminology, contexts, and clear synonyms.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= LESSONS MODULE VIEW ================= -->
+        <section id="lessons-view" class="view-panel" style="display: none;">
+            <div class="search-container">
+                <input type="text" id="lesson-search" placeholder="Search lessons (e.g., Tenses, Nouns, Antonyms)..." oninput="app.handleSearch(this.value)">
+                <div class="filter-chips">
+                    <button class="chip active" id="chip-all" onclick="app.filterLessons('all')">All Material</button>
+                    <button class="chip" id="chip-grammar" onclick="app.filterLessons('grammar')">Grammar</button>
+                    <button class="chip" id="chip-pos" onclick="app.filterLessons('parts-of-speech')">Parts of Speech</button>
+                    <button class="chip" id="chip-vocab" onclick="app.filterLessons('vocabulary')">Vocabulary</button>
+                </div>
+            </div>
+
+            <div id="lessons-render-target" class="lessons-list">
+                <!-- Lessons injected via JavaScript -->
+            </div>
+        </section>
+
+        <!-- ================= QUIZ ENGINE VIEW ================= -->
+        <section id="quizzes-view" class="view-panel" style="display: none;">
+            <div id="quiz-selection">
+                <h2>Select Assessment Field</h2>
+                <p>Complete any quiz module with a score of 100% to instantly clear your verification certificate.</p>
+                <div class="quiz-select-grid">
+                    <button class="btn-primary" onclick="app.startQuiz('grammar')">Launch Grammar Quiz</button>
+                    <button class="btn-primary" onclick="app.startQuiz('vocabulary')">Launch Vocabulary Quiz</button>
+                </div>
+            </div>
+
+            <div id="quiz-runner" style="display: none;">
+                <div class="quiz-header">
+                    <h2 id="quiz-title">Active Assessment</h2>
+                    <button class="btn-danger-sm" onclick="app.exitQuiz()">Exit Test</button>
+                </div>
+                <div id="quiz-questions-container">
+                    <!-- Dynamic Questions Injection -->
+                </div>
+                <button class="btn-success" style="margin-top:20px; width:100%;" onclick="app.evaluateQuiz()">Submit Assessment</button>
+            </div>
+
+            <div id="quiz-result-view" class="result-card" style="display: none;">
+                <h2>Assessment Results</h2>
+                <div class="score-display" id="quiz-score-percent">0%</div>
+                <p id="quiz-feedback-text"></p>
+                <div id="quiz-review-breakdown"></div>
+                <button class="btn-primary" onclick="app.exitQuiz()">Return to Portal</button>
+            </div>
+        </section>
+
+        <!-- ================= CERTIFICATE RENDER VIEW ================= -->
+        <section id="certificate-view" class="view-panel" style="display: none;">
+            <div class="cert-actions">
+                <button class="btn-primary" onclick="window.print()">🖨️ Print / Save as PDF</button>
+                <button class="btn-secondary" onclick="app.switchTab('dashboard')">Back to Dashboard</button>
+            </div>
+            
+            <!-- Structural Print Certificate Container -->
+            <div class="certificate-canvas" id="printable-certificate">
+                <div class="cert-border-outer">
+                    <div class="cert-border-inner">
+                        <div class="cert-header">Ubaidilms</div>
+                        <div class="cert-title">Certificate of Achievement</div>
+                        <div class="cert-subtext">This micro-credential document is proudly presented to</div>
+                        <div class="cert-recipient" id="cert-recipient-name">John Doe</div>
+                        <div class="cert-reason">
+                            for successfully fulfilling the mandatory training modules and demonstrating verified competency in the areas of core English Syntax, Structural Grammar, and Lexical Contextual Vocabulary.
+                        </div>
+                        <div class="cert-footer-meta">
+                            <div class="sig-block">
+                                <div class="sig-line"></div>
+                                <p><strong>Samiullah Samejo</strong></p>
+                                <p class="sig-title">Lead Architect & Developer</p>
+                            </div>
+                            <div class="sig-block">
+                                <div class="sig-line"></div>
+                                <p><strong>Ubaidi IT Community</strong></p>
+                                <p class="sig-title">Educational Delivery Engine</p>
+                            </div>
+                        </div>
+                        <div class="cert-branding-node">
+                            Powered by IT Solution ecosystem
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Global Application Brand Footer -->
+    <footer class="global-footer">
+        <p>Sponsored & Developed by <strong>Samiullah Samejo</strong></p>
+        <p>Powered by <strong>Ubaidi IT Community</strong> & <strong>IT Solution</strong></p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
