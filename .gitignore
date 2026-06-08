@@ -1,0 +1,32 @@
+# Local environmental variable configs
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dependency manifests & tracking modules
+node_modules/
+jspm_packages/
+
+# Production output compilation bundles
+build/
+dist/
+.out/
+
+# Operational systems logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# IDE specifications/workspace data caches
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+.DS_Store
